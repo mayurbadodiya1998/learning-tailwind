@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgHttpLoaderComponent, Spinkit } from 'ng-http-loader';
 
@@ -9,7 +9,14 @@ import { NgHttpLoaderComponent, Spinkit } from 'ng-http-loader';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'learning-tailwind';
   public spinkit = Spinkit;
+
+  constructor() { }
+
+  ngOnInit(): void {
+    console.log("inside ng on init")
+  }
+
 }
