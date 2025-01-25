@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgOtpInputConfig } from 'ng-otp-input';
+import { AuthService } from '../auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forget-password',
@@ -11,10 +14,11 @@ import { NgOtpInputConfig } from 'ng-otp-input';
 export class ForgetPasswordComponent implements OnInit {
 
   @Input() type!: 'LOGIN' | 'SIGNUP';
-  @Input() email!: string;
+  @Input() getSignupMail!: string;
   otpForm!: FormGroup;
   isSubmitted!: boolean;
   otp!: number;
+  isOtpAlreadySent = false;
   isEmailSubmitted = false;
   otpConfig: NgOtpInputConfig = {
     length: 6,
@@ -30,28 +34,57 @@ export class ForgetPasswordComponent implements OnInit {
     disableAutoFocus: true,
   };
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.otpForm = this.fb.group({
       email: ['', Validators.required],
       otp: ['', Validators.required]
     })
-
+    if (this.getSignupMail) {
+      this.isOtpAlreadySent = true
+      this.otpForm.patchValue({ email: this.getSignupMail })
+    }
   }
 
   get f(): { [key: string]: AbstractControl } {
     return this.otpForm.controls;
   }
+
   otpFormSubmit() {
     this.isSubmitted = true
     if (!this.otpForm.valid) {
       return
     }
-    console.log("inside login submit", this.otpForm.value)
+    this.authService.verifyOtp(this.otpForm.value).subscribe({
+      next: res => {
+        if (res.success) {
+          this.toastr.success(res.message);
+          this.router.navigate(['/auth/login'])
+        }
+      }, error: err => {
+        this.toastr.error(err.error.error.message)
+      }
+    })
   }
 
   sendOtp() {
     this.isEmailSubmitted = true;
+    if (!this.otpForm.value.email) {
+      return
+    }
+    let params = {
+      email: this.otpForm.value.email
+    }
+    this.authService.sendOtp(params).subscribe({
+      next: res => {
+        if (res.success) {
+          this.isOtpAlreadySent = true;
+          this.toastr.success(res.message)
+        }
+      }, error: err => {
+        this.toastr.error(err.error.error.message)
+      }
+    })
   }
 }

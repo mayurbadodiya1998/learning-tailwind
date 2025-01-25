@@ -28,19 +28,24 @@ export class LoginComponent implements OnInit {
   }
 
   loginFormSubmit() {
+
     this.isSubmitted = true
+
     if (!this.loginForm.valid) {
       return
     }
-    this.authService.login(this.loginForm.value).subscribe(res => {
-      if (res) {
-        console.log("login res ", res)
-        this.toastr.success(res.message)
+    this.authService.login(this.loginForm.value).subscribe({
+      next: res => {
+        if (res) {
+          console.log("login res ", res)
+          this.toastr.success(res.message)
+        }
+      }, error: err => {
+        console.log(err)
+        this.toastr.error(err.error.error.message)
       }
-    }, err => {
-      console.log(err)
-      this.toastr.error(err.error.error.message)
     })
+
   }
 
 
