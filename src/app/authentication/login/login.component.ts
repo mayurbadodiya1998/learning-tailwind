@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import CoreService from '../../../core/core.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isSubmitted!: boolean;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private coreService: CoreService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -28,21 +30,18 @@ export class LoginComponent implements OnInit {
   }
 
   loginFormSubmit() {
-
     this.isSubmitted = true
-
     if (!this.loginForm.valid) {
       return
     }
     this.authService.login(this.loginForm.value).subscribe({
       next: res => {
         if (res) {
-          console.log("login res ", res)
-          this.toastr.success(res.message)
+          this.coreService.toastrSuccess(res.message)
+          this.router.navigate(['/home'])
         }
       }, error: err => {
-        console.log(err)
-        this.toastr.error(err.error.error.message)
+        this.coreService.toastrError(err.error.error.message)
       }
     })
 

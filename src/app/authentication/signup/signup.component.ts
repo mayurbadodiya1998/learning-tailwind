@@ -3,6 +3,7 @@ import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import CoreService from '../../../core/core.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,7 @@ export class SignupComponent implements OnInit {
   isOtpSent = false;
   userEmail = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private coreService: CoreService, private router: Router) { }
 
   get f() {
     return this.signupForm.controls
@@ -40,11 +41,11 @@ export class SignupComponent implements OnInit {
       next: res => {
         if (res.success) {
           this.userEmail = this.signupForm.value.email;
-          this.toastr.success(res.message)
+          this.coreService.toastrSuccess(res.message)
           this.isOtpSent = true
         }
       }, error: err => {
-        this.toastr.error(err.error.error.message)
+        this.coreService.toastrError(err.error.error.message)
       }
     })
   }

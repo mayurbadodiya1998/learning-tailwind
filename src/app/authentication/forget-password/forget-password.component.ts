@@ -4,6 +4,7 @@ import { NgOtpInputConfig } from 'ng-otp-input';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import CoreService from '../../../core/core.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -34,7 +35,7 @@ export class ForgetPasswordComponent implements OnInit {
     disableAutoFocus: true,
   };
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private coreService: CoreService, private router: Router) { }
 
   ngOnInit(): void {
     this.otpForm = this.fb.group({
@@ -59,11 +60,11 @@ export class ForgetPasswordComponent implements OnInit {
     this.authService.verifyOtp(this.otpForm.value).subscribe({
       next: res => {
         if (res.success) {
-          this.toastr.success(res.message);
+          this.coreService.toastrSuccess(res.message);
           this.router.navigate(['/auth/login'])
         }
       }, error: err => {
-        this.toastr.error(err.error.error.message)
+        this.coreService.toastrError(err.error.error.message)
       }
     })
   }
@@ -80,10 +81,10 @@ export class ForgetPasswordComponent implements OnInit {
       next: res => {
         if (res.success) {
           this.isOtpAlreadySent = true;
-          this.toastr.success(res.message)
+          this.coreService.toastrSuccess(res.message)
         }
       }, error: err => {
-        this.toastr.error(err.error.error.message)
+        this.coreService.toastrError(err.error.error.message)
       }
     })
   }
