@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   isSubmitted!: boolean;
+  isPasswordVisible: boolean = false;
+  passwordType = "password";
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr: ToastrService, private coreService: CoreService) { }
 
@@ -49,6 +51,14 @@ export class LoginComponent implements OnInit {
 
   }
 
-
+  passwordVisibleToggle() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+    if (this.isPasswordVisible) {
+      this.passwordType = "text"
+    }
+    else {
+      this.passwordType = "password"
+    }
+  }
 
 }
