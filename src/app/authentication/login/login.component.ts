@@ -3,7 +3,7 @@ import { AbstractControl, Form, FormBuilder, FormGroup, Validators } from '@angu
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import CoreService from '../../../core/core.service';
+import { CoreService } from '../../core/core.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isSubmitted!: boolean;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private coreService: CoreService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr: ToastrService, private coreService: CoreService) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -37,11 +37,13 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: res => {
         if (res) {
-          this.coreService.toastrSuccess(res.message)
+          this.coreService.successMessage(res.message)
+          this.coreService.localStorageSetItem('AUTH_TOKEN', res.data);
+          this.coreService.setNotifyItem("AUTH_NOTIFY", true)
           this.router.navigate(['/home'])
         }
       }, error: err => {
-        this.coreService.toastrError(err.error.error.message)
+        this.coreService.errorMessage(err.error.error.message)
       }
     })
 

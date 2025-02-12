@@ -1,0 +1,17 @@
+<div class="lg:w-6">
+    @if(isLoggedIn){
+    <div class="fixed flex items-center justify-center bg-black">
+        <img src="images/taddy-image.jpeg" class="w-full sm:w-100 md:w-100 lg:w-60" alt="Taddy Image">
+    </div>
+    }
+    @else{
+    <div class="text-center">
+    </div>
+    <div class="flex items-center justify-center h-screen bg-gray-100">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            Please <a class="text-sm text-blue-700 font-medium hover:underline" routerLink="/auth/login">Login</a> for
+            better experience
+        </div>
+    </div>
+    }
+</div>

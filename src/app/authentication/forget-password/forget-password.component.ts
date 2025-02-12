@@ -2,9 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgOtpInputConfig } from 'ng-otp-input';
 import { AuthService } from '../auth.service';
-import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import CoreService from '../../../core/core.service';
+import { CoreService } from '../../core/core.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -22,9 +21,9 @@ export class ForgetPasswordComponent implements OnInit {
   isOtpAlreadySent = false;
   isEmailSubmitted = false;
   otpConfig: NgOtpInputConfig = {
-    length: 6,
+    length: 4,
     inputStyles: {
-      width: '50px',
+      width: '45px',
       height: '45px',
       margin: '4px',
       fontSize: '18px',
@@ -35,7 +34,7 @@ export class ForgetPasswordComponent implements OnInit {
     disableAutoFocus: true,
   };
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private coreService: CoreService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private coreService: CoreService) { }
 
   ngOnInit(): void {
     this.otpForm = this.fb.group({
@@ -60,11 +59,11 @@ export class ForgetPasswordComponent implements OnInit {
     this.authService.verifyOtp(this.otpForm.value).subscribe({
       next: res => {
         if (res.success) {
-          this.coreService.toastrSuccess(res.message);
+          this.coreService.successMessage(res.message);
           this.router.navigate(['/auth/login'])
         }
       }, error: err => {
-        this.coreService.toastrError(err.error.error.message)
+        this.coreService.errorMessage(err.error.error.message)
       }
     })
   }
@@ -81,10 +80,10 @@ export class ForgetPasswordComponent implements OnInit {
       next: res => {
         if (res.success) {
           this.isOtpAlreadySent = true;
-          this.coreService.toastrSuccess(res.message)
+          this.coreService.successMessage(res.message)
         }
       }, error: err => {
-        this.coreService.toastrError(err.error.error.message)
+        this.coreService.errorMessage(err.error.error.message)
       }
     })
   }

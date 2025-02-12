@@ -5,12 +5,19 @@
             <a href="/" class="text-2xl font-bold text-white">MyLogo</a>
 
             <!-- Desktop Menu -->
-            <div class="hidden sm:flex space-x-4">
+            @if(!isLoggedIn){<div class="hidden sm:flex space-x-4">
                 <a routerLink="/auth/login" class="text-gray-300 hover:text-white">Login</a>
                 <a routerLink="/auth/signup" class="text-gray-300 hover:text-white">Signup</a>
                 <!--  <a routerLink="/services" class="text-gray-300 hover:text-white">Services</a>
                 <a routerLink="/contact" class="text-gray-300 hover:text-white">Contact</a> -->
+            </div>}
+            @else {
+            <div class="hidden sm:flex space-x-4">
+                <button (click)="logout()" class="text-gray-300 hover:text-white">Logout</button>
+                <!--  <a routerLink="/services" class="text-gray-300 hover:text-white">Services</a>
+                    <a routerLink="/contact" class="text-gray-300 hover:text-white">Contact</a> -->
             </div>
+            }
 
             <!-- Mobile Menu Button -->
             <button
@@ -29,11 +36,15 @@
     </nav>
 
     <!-- Mobile Menu -->
-    <div *ngIf="isMobileMenuOpen" class="sm:hidden bg-gray-700">
-        <div class="px-2 pt-2 pb-3 space-y-1">
+    <div *ngIf="isMobileMenuOpen" class="sm:hidden bg-gray-700 relative">
+        @if(!isLoggedIn){<div class="px-2 pt-2 pb-3 space-y-1">
             <a routerLink="/auth/login" class="block text-gray-300 hover:text-white">Login</a>
             <a routerLink="/auth/signup" class="block text-gray-300 hover:text-white">Signup</a>
 
-        </div>
+        </div>}
+        @if(isLoggedIn){<div class="px-2 pt-2 pb-3 space-y-1">
+            <button (click)="logout()" class="block text-gray-300 hover:text-white">Logout</button>
+
+        </div>}
     </div>
 </header>
