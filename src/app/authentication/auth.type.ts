@@ -1,6 +1,7 @@
 export type ICredential = {
     email: string,
-    password?: string
+    password?: string,
+    otp?: string
 }
 export type IUser = {
     first_name: string,

@@ -22,8 +22,12 @@ export class AuthService {
   }
 
   sendOtp(params: ICredential): Observable<any> {
-    let url = `${environment.apiUrl}auth/sent-otp`;
+    let url = `${environment.apiUrl}auth/send-otp`;
     return this.http.post(url, params);
+  }
 
+  verifyOtp(params: ICredential): Observable<any> {
+    let url = `${environment.apiUrl}auth/verify-otp`;
+    return this.http.post(url, params);
   }
 }
